@@ -1,6 +1,8 @@
 ﻿using dotnet_etcd;
 using k8s;
 using k8s.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Etcd
 {
@@ -53,6 +55,15 @@ namespace Etcd
             if (existingNodeportService == null)
             {
                 await kubeClient.CoreV1.CreateNamespacedServiceAsync(nodeportServiceToCreate, "interconnect");
+            }
+            
+            var statefulsetWatched = kubeClient.AppsV1.ListNamespacedStatefulSetWithHttpMessagesAsync("interconnect", watch: true);
+            await foreach (var (type, item) in statefulsetWatched.WatchAsync<V1StatefulSet, V1StatefulSetList>())
+            {
+                if (item.Status.AvailableReplicas == 3)
+                {
+                    break;
+                }
             }
 
             EtcdClient client = new EtcdClient("http://localhost:30379,http://localhost:30380");
