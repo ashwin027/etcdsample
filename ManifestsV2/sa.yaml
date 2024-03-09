@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: etcd
+  namespace: "interconnect"
+  labels:
+    app: etcd

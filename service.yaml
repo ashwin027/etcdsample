@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: etcd
+    app.kubernetes.io/instance: etcd
+    app.kubernetes.io/name: etcd
+  name: etcd
+  namespace: interconnect
+spec:
+  type: NodePort
+  ports:
+  - name: client-np
+    port: 2379
+    nodePort: 30379
+    protocol: TCP
+    targetPort: 2379
+  - name: peer-np
+    port: 2380
+    nodePort: 30380
+    protocol: TCP
+    targetPort: 2380
+  selector:
+    app.kubernetes.io/component: etcd
+    app.kubernetes.io/instance: etcd
+    app.kubernetes.io/name: etcd

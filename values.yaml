@@ -1,0 +1,3 @@
+auth:
+  rbac:
+    rootPassword: "interconnect"
